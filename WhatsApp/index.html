@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>WhatsApp</title>
+  <link rel="icon" type="image/png" href="Icono.png">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    .pantalla-video {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+    }
+
+    .pantalla-video video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .pantalla-video.oculta {
+      display: none;
+    }
+
+    .captcha-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .captcha-box {
+      width: 304px;
+      height: 78px;
+      background: white;
+      border: 1px solid #d3d3d3;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      box-shadow: 1.0 5px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .captcha-left {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .checkbox-custom {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #999;
+      border-radius: 2px;
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .checkbox-custom.checked {
+      border-color: #4285f4;
+      background: #4285f4;
+      color: white;
+    }
+
+    .checkmark {
+      display: none;
+      font-size: 16px;
+    }
+
+    .checkbox-custom.checked .checkmark {
+      display: block;
+    }
+
+    .captcha-text {
+      font-size: 14px;
+    }
+
+    .captcha-logo img {
+      width: 50px;
+      height: auto;
+    }
+
+    .captcha-info {
+      font-size: 10px;
+      text-align: center;
+      margin-top: 5px;
+      color: #555;
+    }
+
+    .contenido {
+      width: 100%;
+      height: 100vh;
+      position: relative;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .contenido.visible {
+      display: flex;
+    }
+
+    .video-fondo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.9; /* Aumentada */
+    }
+
+    .textos {
+      position: relative;
+      z-index: 2;
+      color: white;
+      text-align: center;
+      text-shadow: 0 0 10px rgba(0,0,0,0.7);
+    }
+
+    .texto-pequeno {
+      font-size: 1.2em;
+      margin: 10px 0;
+    }
+
+    .texto-principal {
+      font-size: 2.5em;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Intro -->
+  <div class="pantalla-video" id="introVideo">
+    <video autoplay muted>
+      <source src="intro.mp4" type="video/mp4">
+      Tu navegador no soporta el video.
+    </video>
+  </div>
+
+  <!-- Captcha -->
+  <div class="captcha-container" id="captchaContainer">
+    <div>
+      <div class="captcha-box" onclick="marcarCaptcha()">
+        <div class="captcha-left">
+          <div id="checkbox" class="checkbox-custom">
+            <span class="checkmark">✔</span>
+          </div>
+          <div class="captcha-text">No soy un robot</div>
+        </div>
+        <div class="captcha-logo">
+          <img src="recaptcha.png" alt="reCAPTCHA">
+        </div>
+      </div>
+      <div class="captcha-info">reCAPTCHA • Google Inc.</div>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="contenido" id="contenidoPrincipal">
+    <video class="video-fondo" id="videoFondo" loop muted>
+      <source src="fondo.mp4" type="video/mp4">
+      Tu navegador no soporta el video.
+    </video>
+
+    <div class="textos">
+      <div class="texto-pequeno">Texto pequeño arriba</div>
+      <div class="texto-principal">Texto principal en el centro</div>
+      <div class="texto-pequeno">Texto pequeño abajo</div>
+    </div>
+  </div>
+
+  <script>
+    const intro = document.getElementById("introVideo");
+    const captchaContainer = document.getElementById("captchaContainer");
+    const checkbox = document.getElementById("checkbox");
+    const videoFondo = document.getElementById("videoFondo");
+    const contenido = document.getElementById("contenidoPrincipal");
+
+    // Mostrar captcha después de la intro
+    setTimeout(() => {
+      intro.classList.add("oculta");
+      captchaContainer.style.display = "flex";
+    }, 5000);
+
+    function marcarCaptcha() {
+      if (!checkbox.classList.contains("checked")) {
+        checkbox.classList.add("checked");
+
+        // Mostrar contenido y reproducir video con sonido inmediatamente
+        captchaContainer.style.display = "none";
+        contenido.classList.add("visible");
+
+        videoFondo.muted = false;
+        videoFondo.play().catch(e => {
+          console.warn("Error al reproducir video:", e);
+        });
+      }
+    }
+  </script>
+
+</body>
+</html>
